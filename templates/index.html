@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Commerce AI Assistant</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+	</head>
+	<body>
+    <div class="container">
+        <!-- Header with gradient -->
+        <div class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-robot"></i>
+                    <span>E-Commerce AI</span>
+								</div>
+                <div class="status">
+                    <div class="status-dot"></div>
+                    <span>Online</span>
+								</div>
+							</div>
+						</div>
+
+        <!-- Chat container -->
+        <div class="chat-container">
+            <div class="chat-header">
+                <div class="chat-info">
+                    <div class="avatar">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="chat-details">
+                        <h3>Product Expert</h3>
+                        <p>Ask me about products, features, and recommendations!</p>
+                    </div>
+                </div>
+                <div class="chat-actions">
+                    <button class="action-btn" title="Clear Chat">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Messages area -->
+            <div class="messages-container" id="messageFormeight">
+                <!-- Welcome message -->
+                <div class="message bot-message">
+                    <div class="message-avatar">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            <p>👋 Hi! I'm your AI product expert. I can help you find the perfect products based on your needs!</p>
+                            <p>Try asking me about:</p>
+                            <ul>
+                                <li>🛍️ Product recommendations</li>
+                                <li>⭐ Customer reviews and ratings</li>
+                                <li>💰 Budget-friendly options</li>
+                                <li>🔍 Specific features and comparisons</li>
+                            </ul>
+                        </div>
+                        <div class="message-time">Just now</div>
+                    </div>
+                </div>
+						</div>
+
+            <!-- Input area -->
+            <div class="input-container">
+                <form id="messageArea" class="input-form">
+                    <div class="input-wrapper">
+                        <input type="text" id="text" name="msg" placeholder="Ask me about products..." autocomplete="off" required>
+                        <button type="submit" class="send-btn">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+								</div>
+							</form>
+						</div>
+					</div>
+
+        <!-- Floating action button -->
+        <div class="fab">
+            <i class="fas fa-magic"></i>
+			</div>
+		</div>
+		
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script>
+			$(document).ready(function() {
+            // Auto-scroll to bottom
+            function scrollToBottom() {
+                const messagesContainer = $("#messageFormeight");
+                messagesContainer.scrollTop(messagesContainer[0].scrollHeight);
+            }
+
+            // Add typing indicator
+            function showTypingIndicator() {
+                const typingHtml = `
+                    <div class="message bot-message typing-indicator">
+                        <div class="message-avatar">
+                            <i class="fas fa-tv"></i>
+                        </div>
+                        <div class="message-content">
+                            <div class="message-bubble">
+                                <div class="typing-dots">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                $("#messageFormeight").append(typingHtml);
+                scrollToBottom();
+            }
+
+            // Remove typing indicator
+            function removeTypingIndicator() {
+                $(".typing-indicator").remove();
+            }
+
+            // Handle form submission
+				$("#messageArea").on("submit", function(event) {
+                event.preventDefault();
+                
+                const userInput = $("#text").val().trim();
+                if (!userInput) return;
+
+					const date = new Date();
+                const time = date.toLocaleTimeString('en-US', { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+
+                // Add user message
+                const userHtml = `
+                    <div class="message user-message">
+                        <div class="message-content">
+                            <div class="message-bubble">
+                                <p>${userInput}</p>
+                            </div>
+                            <div class="message-time">${time}</div>
+                        </div>
+                        <div class="message-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    </div>
+                `;
+                
+                $("#messageFormeight").append(userHtml);
+					$("#text").val("");
+                scrollToBottom();
+
+                // Show typing indicator
+                showTypingIndicator();
+
+                // Send request to server
+					$.ajax({
+                    data: { msg: userInput },
+						type: "POST",
+						url: "/get",
+                    timeout: 30000
+					}).done(function(data) {
+                    removeTypingIndicator();
+                    
+                    // Format the AI response
+                    const formattedData = formatAIResponse(data);
+                    
+                    const botHtml = `
+                        <div class="message bot-message">
+                            <div class="message-avatar">
+                                <i class="fas fa-tv"></i>
+                            </div>
+                            <div class="message-content">
+                                <div class="message-bubble">
+                                    ${formattedData}
+                                </div>
+                                <div class="message-time">${time}</div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    $("#messageFormeight").append(botHtml);
+                    scrollToBottom();
+                }).fail(function(xhr, status, error) {
+                    removeTypingIndicator();
+                    
+                    const errorHtml = `
+                        <div class="message bot-message error">
+                            <div class="message-avatar">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="message-content">
+                                <div class="message-bubble">
+                                    <p>Sorry, I'm having trouble connecting right now. Please try again in a moment.</p>
+                                </div>
+                                <div class="message-time">${time}</div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    $("#messageFormeight").append(errorHtml);
+                    scrollToBottom();
+                });
+            });
+
+            // Clear chat functionality
+            $(".action-btn").click(function() {
+                $("#messageFormeight").html(`
+                    <div class="message bot-message">
+                        <div class="message-avatar">
+                            <i class="fas fa-tv"></i>
+                        </div>
+                        <div class="message-content">
+                            <div class="message-bubble">
+                                <p>👋 Hi! I'm your AI product expert. I can help you find the perfect products based on your needs!</p>
+                                <p>Try asking me about:</p>
+                                <ul>
+                                    <li>🛍️ Product recommendations</li>
+                                    <li>⭐ Customer reviews and ratings</li>
+                                    <li>💰 Budget-friendly options</li>
+                                    <li>🔍 Specific features and comparisons</li>
+                                </ul>
+                            </div>
+                            <div class="message-time">Just now</div>
+                        </div>
+                    </div>
+                `);
+            });
+
+            // Format AI response with proper formatting
+            function formatAIResponse(text) {
+                if (!text) return '<p>No response received.</p>';
+                
+                // If the text already contains HTML tags, we need to decode them
+                if (text.includes('&lt;') || text.includes('&gt;')) {
+                    // Decode HTML entities that were escaped
+                    text = text
+                        .replace(/&lt;/g, '<')
+                        .replace(/&gt;/g, '>')
+                        .replace(/&amp;/g, '&');
+                }
+                
+                // If the text contains raw HTML tags, use them directly
+                if (text.includes('<p>') || text.includes('<div>') || text.includes('<span>')) {
+                    return text;
+                }
+                
+                // For plain text, apply markdown-style formatting
+                let formatted = text
+                    .replace(/\n\n/g, '</p><p>')  // Double line breaks become new paragraphs
+                    .replace(/\n/g, '<br>')        // Single line breaks become <br>
+                    .replace(/^/, '<p>')           // Start with <p>
+                    .replace(/$/, '</p>');         // End with </p>
+                
+                // Handle lists (lines starting with - or * or numbers)
+                formatted = formatted.replace(
+                    /<p>([-*•]\s+.*?)<\/p>/g,
+                    '<ul><li>$1</li></ul>'
+                );
+                
+                // Handle numbered lists
+                formatted = formatted.replace(
+                    /<p>(\d+\.\s+.*?)<\/p>/g,
+                    '<ol><li>$1</li></ol>'
+                );
+                
+                // Handle bold text (**text**)
+                formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                
+                // Handle italic text (*text*)
+                formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
+                
+                // Handle code blocks (`code`)
+                formatted = formatted.replace(/`(.*?)`/g, '<code>$1</code>');
+                
+                // Clean up empty paragraphs
+                formatted = formatted.replace(/<p><\/p>/g, '');
+                
+                return formatted;
+            }
+
+            // Initial scroll
+            scrollToBottom();
+			});
+		</script>
+    </body>
+</html>

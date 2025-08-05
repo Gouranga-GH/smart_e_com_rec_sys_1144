@@ -1,0 +1,68 @@
+# ===========================================
+# E-COMMERCE RECOMMENDATION SYSTEM
+# Environment Variables Configuration
+# ===========================================
+
+# ===========================================
+# ASTRA DB CONFIGURATION
+# ===========================================
+
+# AstraDB API Endpoint (Get from AstraDB Console)
+# Format: https://your-database-id-your-region.apps.astra.datastax.com
+ASTRA_DB_API_ENDPOINT=https://your-database-id-your-region.apps.astra.datastax.com
+
+# AstraDB Application Token (Get from AstraDB Console)
+# This is your database access token
+ASTRA_DB_APPLICATION_TOKEN=your_astra_db_application_token_here
+
+# AstraDB Keyspace (Database namespace)
+# Default: default_keyspace
+ASTRA_DB_KEYSPACE=default_keyspace
+
+# ===========================================
+# AI MODEL API KEYS
+# ===========================================
+
+# Groq API Key (For LLM responses)
+# Get from: https://console.groq.com/
+GROQ_API_KEY=your_groq_api_key_here
+
+# HuggingFace Token (For embeddings)
+# Get from: https://huggingface.co/settings/tokens
+HF_TOKEN=your_huggingface_token_here
+
+# ===========================================
+# OPTIONAL CONFIGURATION
+# ===========================================
+
+# Flask Debug Mode (Development only)
+# Set to True for development, False for production
+FLASK_DEBUG=True
+
+# Flask Port (Default: 5000)
+FLASK_PORT=5000
+
+# ===========================================
+# EXAMPLE VALUES (Replace with your actual values)
+# ===========================================
+
+# ASTRA_DB_API_ENDPOINT=https://12345678-1234-1234-1234-123456789abc-us-east1.apps.astra.datastax.com
+# ASTRA_DB_APPLICATION_TOKEN=AstraCS:your_actual_token_here
+# ASTRA_DB_KEYSPACE=ecom_keyspace
+# GROQ_API_KEY=gsk_your_actual_groq_key_here
+# HF_TOKEN=hf_your_actual_huggingface_token_here
+
+# ===========================================
+# SETUP INSTRUCTIONS
+# ===========================================
+
+# 1. Copy this file to .env
+#    cp env_sample.txt .env
+
+# 2. Replace all placeholder values with your actual API keys
+
+# 3. Never commit .env file to version control
+#    Add .env to your .gitignore file
+
+# 4. Test your configuration:
+#    python -c "from ecom.config import Config; Config.validate_config(); print('Configuration is valid!')" 

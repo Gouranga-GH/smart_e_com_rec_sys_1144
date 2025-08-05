@@ -1,0 +1,14 @@
+# Copy this file to .env and replace with your actual values
+
+# AstraDB Configuration
+ASTRA_DB_API_ENDPOINT=https://your-database-id-your-region.apps.astra.datastax.com
+ASTRA_DB_APPLICATION_TOKEN=your_astra_db_application_token_here
+ASTRA_DB_KEYSPACE=default_keyspace
+
+# AI Model API Keys
+GROQ_API_KEY=your_groq_api_key_here
+HF_TOKEN=your_huggingface_token_here
+
+# Optional Flask Configuration
+FLASK_DEBUG=True
+FLASK_PORT=5000 
