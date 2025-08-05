@@ -178,6 +178,20 @@ Access Grafana at `http://localhost:32000` (default credentials: admin/admin) to
 - **Clear Chat**: Reset conversation functionality
 - **Error Handling**: Graceful error messages
 
+## 📸 Screenshots
+
+### Application Interface
+
+![E-Commerce AI Chat Interface](screenshots/ecom_rs_1.png)
+
+![Product Recommendations](screenshots/ecom_rs_2.png)
+
+![Interactive Chat Experience](screenshots/ecom_rs_3.png)
+
+![Product Database Integration](screenshots/ecom_rs_4.png)
+
+![Advanced AI Features](screenshots/ecom_rs_5.png)
+
 ## 🔧 Configuration
 
 ### Environment Variables
